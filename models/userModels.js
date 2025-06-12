@@ -1,0 +1,94 @@
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs"); 
+const { Schema } = require("mongoose");
+const { bool } = require("sharp");
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "User Name Require !!"],
+      minlength: [3, "Too Short User name !!"],
+      // "  ahmed " => "ahmed"
+      trim:true,
+    },
+    // A and B => shoping.com/a-and-b
+    slug: {
+      type: String,
+      lowercase: true,
+    },
+    phone:String,
+    profileImage: String,
+    email: {
+      type: String,
+      require: [true, "email Rquired"],
+      unique: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+      require: [true, "password Rquired"],
+      minlength: [6, "Too Short Password"],
+    },
+
+    passwordChangedAt: Date,
+    passwordResetVerified: Boolean,
+    passwordResetExpires: Date,
+
+    role: {
+      type: String,
+      enum: ['user','manager', 'admin'],
+      default:"user",
+    },
+    active: {
+      type: Boolean,
+      default:true,
+    },
+  },
+  {
+    timestamps: true,
+    // used to use .vrtual parsing
+    toJSON: {
+      virtuals: true,
+      versionKey: false,
+      transform: function (doc, ret) {
+        delete ret.id;         // remove string version of _id
+        delete ret.password;
+        return ret;
+      },
+    },
+    toObject: {
+      virtuals: true,
+      versionKey: false,
+      transform: function (doc, ret) {
+        delete ret.id;
+        delete ret.password;
+        return ret;
+      },
+    },
+  }
+);
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  
+  // Hash password with cost of 12
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+// Instance method to check if entered password is correct
+userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+  
+};
+
+// Find and Create and update (findAll in getAll service made manual)
+userSchema.virtual("profileImageUrl").get(function () {
+  if (this.profileImage) {
+    return `${process.env.BASE_URL}/users/${this.profileImage}`;
+  }
+  return null;
+});
+//step 2 create modle
+const userModel = mongoose.model("User", userSchema);
+
+module.exports = userModel;
