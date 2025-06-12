@@ -17,8 +17,3 @@ This is a Node.js E-commerce application.
 ## API Endpoints
 [Document your API endpoints here.]
 
-## Contributing
-[Information on how others can contribute, if applicable.]
-
-## License
-[Choose a license for your project, e.g., MIT, Apache 2.0, etc.] 
