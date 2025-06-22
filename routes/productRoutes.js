@@ -28,7 +28,11 @@ router
     resizeImageCover, 
     createProductValidator, 
     createProduct
-  );
+);
+// nested routes for product reviews
+const reviewRoute = require('./reviewRoutes');
+router.use('/:productId/reviews', reviewRoute);
+  
 
 router
   .route("/:id")

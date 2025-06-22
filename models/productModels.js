@@ -92,6 +92,12 @@ const productSchema = mongoose.Schema(
     },
   }
 );
+productSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'product',
+  localField: '_id',
+});
+
 
 // mongoose MiddleWare 
 productSchema.pre(/^find/, function (next) {
@@ -99,8 +105,10 @@ productSchema.pre(/^find/, function (next) {
     path: "category",
     select: "name-_id",
   });
+
   next()
 });
+
 productSchema.virtual("imageCoverUrl").get(function () {
   if (this.imageCover) {
     return `${process.env.BASE_URL}/products/${this.imageCover}`;

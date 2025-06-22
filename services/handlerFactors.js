@@ -62,9 +62,15 @@ exports.createOne = (Model) =>
     res.status(201).json({ data: document });
   });
 
-exports.getOne = (Model) =>
+exports.getOne = (Model,paginationOption) =>
   asyncHandler(async (req, res, next) => {
-    const document = await Model.findById(req.params.id);
+    // build the query
+    let query = Model.findById(req.params.id);
+    if (paginationOption) {
+      query = query.populate(paginationOption);
+    }
+    // Execute 
+    const document = await query;
     if (!document) {
       return next(new ApiError(`No document found with id: ${req.params.id}`, 404));
     }

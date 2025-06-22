@@ -62,7 +62,7 @@ exports.getProducts = getAll(ProductModel, "product");
 //@desc Git product
 //@route GET /api/v1/products/:id
 //@access public
-exports.getProduct = getOne(ProductModel);
+exports.getProduct = getOne(ProductModel,'reviews');
 
 //@desc create Product
 //@route POST /api/v1/products

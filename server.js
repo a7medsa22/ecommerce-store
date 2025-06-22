@@ -1,4 +1,5 @@
 const path = require('path');
+require('dotenv').config();
 
 const express = require('express');
 const dotenv =  require('dotenv');
@@ -15,6 +16,8 @@ const brandRoute = require("./routes/brandRoutes");
 const productRoute = require("./routes/productRoutes");
 const userRoute = require("./routes/userRoutes.js");
 const authRoute = require("./routes/authRoutes.js");
+const reviewRoute = require("./routes/reviewRoutes.js");
+
 //connect with DB
 dbconnection();
 
@@ -39,7 +42,9 @@ app.use("/api/v1/subcategories/", subCategoryRoute);
 app.use("/api/v1/brands/", brandRoute);
 app.use("/api/v1/products/", productRoute);   
 app.use("/api/v1/users/", userRoute);   
-app.use("/api/v1/auth/", authRoute);   
+app.use("/api/v1/auth/", authRoute); 
+app.use("/api/v1/reviews/", reviewRoute);
+  
 
 
 app.use((req, res, next) => {
@@ -65,10 +70,12 @@ const server = app.listen(PORT, () => {
 });
 
 process.on("unhandledRejection", (err) => {
-    console.log(`unhandledRejection : ${err.name} | ${err.message}`);
+    console.error(`unhandledRejection : ${err.name} | ${err.message}`);
     server.close(() => {    
         console.error("Shuting down....");
         process.exit(1);
     });
     
 });
+
+module.exports = app;

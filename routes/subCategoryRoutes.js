@@ -1,12 +1,12 @@
 const express = require('express');
 const {
   getSubCategories,
-  createfilterObject,
   getSubCategory,
   createSubCategory,
-  setCategoryIdToBody,
   updateSubCategory,
   deleteSubCategory,
+  setCategoryIdToBody,
+  createfilterObject,
 } = require("../services/subCategoryService");
 const {
     deleteSubCategoryvalidator,

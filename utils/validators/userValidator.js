@@ -113,3 +113,38 @@ exports.deleteUservalidator = [
   check("id").isMongoId().withMessage("V:)- Idvalid User Id Format"),
   validatorMiddleware,
 ];
+
+exports.updateLoggedPasswordValidator = [
+  check("currentPassword")
+    .notEmpty()
+    .withMessage("V:)- Current password is required"),
+  check("password")
+    .notEmpty()
+    .withMessage("V:)- New password is required")
+    .isLength({ min: 6 })
+    .withMessage("V:)- New password must be at least 6 characters long"),
+  check("passwordConfirm")
+    .notEmpty()
+    .withMessage("V:)- Password confirmation is required")
+    .custom((val, { req }) => {
+      if (val !== req.body.password) {
+        throw new Error("Password confirmation does not match new password");
+      }
+      return true;
+    }),
+  validatorMiddleware,
+];
+
+exports.updateLoggedInfoValidator = [
+  check("name")
+    .optional()
+    .isLength({ min: 3 })
+    .withMessage("V:)- Name must be at least 3 characters long")
+    .isLength({ max: 30 })
+    .withMessage("V:)- Name must be less than 30 characters long"),
+  check("phone")
+    .optional()
+    .isMobilePhone(["ar-EG", "ar-IQ", "ar-AE"])
+    .withMessage("V:)- Invalid phone number format"),
+  validatorMiddleware,
+];
