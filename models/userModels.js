@@ -9,39 +9,43 @@ const userSchema = new Schema(
       required: [true, "User Name Require !!"],
       minlength: [3, "Too Short User name !!"],
       // "  ahmed " => "ahmed"
-      trim:true,
+      trim: true,
     },
     // A and B => shoping.com/a-and-b
     slug: {
       type: String,
       lowercase: true,
     },
-    phone:String,
+    phone: String,
     profileImage: String,
     email: {
       type: String,
-      require: [true, "email Rquired"],
+      required: [true, "email Rquired"],
       unique: true,
       lowercase: true,
     },
     password: {
       type: String,
-      require: [true, "password Rquired"],
+      required: [true, "password Rquired"],
       minlength: [6, "Too Short Password"],
+      select: false,
     },
-
+    passwordResetCode: {
+      type: String,
+      select: false,
+    },
     passwordChangedAt: Date,
     passwordResetVerified: Boolean,
     passwordResetExpires: Date,
 
     role: {
       type: String,
-      enum: ['user','manager', 'admin'],
-      default:"user",
+      enum: ["user", "manager", "admin"],
+      default: "user",
     },
     active: {
       type: Boolean,
-      default:true,
+      default: true,
     },
   },
   {
@@ -51,7 +55,7 @@ const userSchema = new Schema(
       virtuals: true,
       versionKey: false,
       transform: function (doc, ret) {
-        delete ret.id;         // remove string version of _id
+        delete ret.id; // remove string version of _id
         delete ret.password;
         return ret;
       },
@@ -67,16 +71,16 @@ const userSchema = new Schema(
     },
   }
 );
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  
-  // Hash password with cost of 12
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
+
 // Instance method to check if entered password is correct
-userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword)
+{
   return await bcrypt.compare(candidatePassword, userPassword);
   
 };

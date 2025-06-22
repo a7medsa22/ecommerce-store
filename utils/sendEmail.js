@@ -14,7 +14,7 @@ const sendEmail = (option) => {
       from: "Sotohy-Amazon App <abostohy123@gmail.com>",
       to: option.email,
       subject: option.subject,
-      text: option.massage,
+      text: option.message,
     };
     transporter.sendMail(multioption);
 };

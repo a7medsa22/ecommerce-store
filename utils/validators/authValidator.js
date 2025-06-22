@@ -58,3 +58,26 @@ exports.loginValidator = [
   validatorMiddleware,
 ];
 
+exports.resetPasswordValidator = [
+  check("email")
+    .notEmpty()
+    .withMessage("V:)- Required email")
+    .isEmail()
+    .withMessage("V:)- Invalid email format"),
+  check("newPassword")
+    .notEmpty()
+    .withMessage("V:)- Required new password")
+    .isLength({ min: 6 })
+    .withMessage("V:)- New password must be at least 6 characters long"),
+  check("newPasswordConfirm")
+    .notEmpty()
+    .withMessage("V:)- Required password confirmation")
+    .custom((val, { req }) => {
+      if (val !== req.body.newPassword) {
+        throw new Error("Password confirmation does not match new password");
+      }
+      return true;
+    }),
+  validatorMiddleware,
+];
+

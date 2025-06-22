@@ -4,14 +4,23 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon server.js",
-    "start:prod": "cross-env NODE_ENV=production node server.js"
+    "start": "nodemon server.js",
+    "start:prod": "cross-env NODE_ENV=production node server.js",
+    "test": "jest",
+    "mcp": "node mcp-api-server.js",
+    "mcp:demo": "node mcp-client.js",
+    "mcp:factored": "node mcp/index.js",
+    "mcp:start": "node -e \"require('./mcp/index.js').startMCPServer(console.log)\"",
+    "mcp:test": "node -e \"require('./mcp/index.js').runMCPServerDemo(console.log)\"",
+    "mcp:simple": "node mcp/simple-server.js",
+    "mcp:simple:test": "node mcp/simple-mcp-client.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.0",
+    "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "colors": "^1.4.0",
@@ -47,6 +56,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react": "^7.37.5",
-    "prettier": "^3.5.3"
+    "jest": "^30.0.2",
+    "prettier": "^3.5.3",
+    "supertest": "^7.1.1"
   }
 }
