@@ -117,7 +117,7 @@ EMAIL_PASSWORD=your-app-password
 #### Development Mode
 
 ```bash
-npm run start:dev
+npm start
 ```
 
 #### Production Mode
