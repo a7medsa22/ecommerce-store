@@ -4,16 +4,10 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "nodemon server.js",
+    "start:div": "nodemon server.js",
     "start:prod": "cross-env NODE_ENV=production node server.js",
-    "test": "jest",
-    "mcp": "node mcp-api-server.js",
-    "mcp:demo": "node mcp-client.js",
-    "mcp:factored": "node mcp/index.js",
-    "mcp:start": "node -e \"require('./mcp/index.js').startMCPServer(console.log)\"",
-    "mcp:test": "node -e \"require('./mcp/index.js').runMCPServerDemo(console.log)\"",
-    "mcp:simple": "node mcp/simple-server.js",
-    "mcp:simple:test": "node mcp/simple-mcp-client.js"
+    "test": "jest"
+   
   },
   "keywords": [],
   "author": "",

@@ -14,7 +14,7 @@ const {
     getReviewValidator,
     updateReviewValidator,
     deleteReviewValidator,
-} = require("../utils/validators/reviewValidator.");
+} = require("../utils/validators/reviewValidator");
 const authprotect = require("../services/authService");
 
 const router = express.Router({ mergeParams: true });
@@ -23,7 +23,7 @@ const router = express.Router({ mergeParams: true });
 
 router
   .route("/")
-  .get(createfilterObject, getReviews)
+  .get(createfilterObject,getReviews)
   .post(
     authprotect.protect,
     authprotect.allowTo("user"),

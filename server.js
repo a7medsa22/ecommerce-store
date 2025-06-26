@@ -17,6 +17,8 @@ const productRoute = require("./routes/productRoutes");
 const userRoute = require("./routes/userRoutes.js");
 const authRoute = require("./routes/authRoutes.js");
 const reviewRoute = require("./routes/reviewRoutes.js");
+const wishlistRoute = require("./routes/wishlistRoutes.js");
+const addressRoute = require("./routes/addressRoutes.js");
 
 //connect with DB
 dbconnection();
@@ -43,7 +45,9 @@ app.use("/api/v1/brands/", brandRoute);
 app.use("/api/v1/products/", productRoute);   
 app.use("/api/v1/users/", userRoute);   
 app.use("/api/v1/auth/", authRoute); 
-app.use("/api/v1/reviews/", reviewRoute);
+app.use("/api/v1/reviews/", reviewRoute);    
+app.use("/api/v1/wishlist/", wishlistRoute);    
+app.use("/api/v1/addresses/", addressRoute);    
   
 
 

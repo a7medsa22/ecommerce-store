@@ -22,6 +22,7 @@ const ApiError = require("../utils/apiError");
 // POST (Create) api/v1//:productId/reviews
 exports.setProductIdToBody = (req, res, next) => {
   if (!req.body.product) req.body.product = req.params.productId;
+  req.body.user = req.user._id; 
   next();
 }
 //@desc Git list of reviews
