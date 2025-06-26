@@ -117,7 +117,7 @@ EMAIL_PASSWORD=your-app-password
 #### Development Mode
 
 ```bash
-npm start
+npm start:dev
 ```
 
 #### Production Mode
@@ -200,12 +200,6 @@ npm test
 * `GET /` - Get all products in the user's wishlist (Authenticated user)
 * `POST /` - Add a product to the user's wishlist (Authenticated user)
 
-  * Body:
-
-    ```json
-    {
-      "productId": "string (MongoId)"
-    }
     ```
 * `DELETE /:productId` - Remove a product from the user's wishlist (Authenticated user)
 
