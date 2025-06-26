@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start:div": "nodemon server.js",
+    "start:dev": "nodemon server.js",
     "start:prod": "cross-env NODE_ENV=production node server.js",
     "test": "jest"
    
