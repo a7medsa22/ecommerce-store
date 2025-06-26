@@ -14,7 +14,6 @@ exports.createReviewValidator = [
     .isFloat({ min: 1, max: 5 })
     .withMessage("V:)Rating must be between 1 and 5"),
   check("comment").optional(),
-  check("user").isMongoId().withMessage("V:)User Id is required"),
   check("product")
     .isMongoId()
     .withMessage("V:)Product Id is required")
@@ -58,7 +57,7 @@ exports.deleteReviewValidator = [
         if (!review) {
           throw new Error("V:)Review not found");
         }
-        if (review.user.toString() !== req.user._id.toString()) {
+        if (review.user._id.toString() !== req.user._id.toString()) {
           throw new Error("V:)You are not authorized to update this review");
         }
       }

@@ -47,6 +47,25 @@ const userSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    // children relation / 1 to many orders  
+
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+      },
+    ],
+
+      addresses: [
+      {
+          id: { type: mongoose.Schema.Types.ObjectId },
+          alias: String,
+          details: String,
+          phone: String,
+          city: String,
+          postalCode: String,
+      },
+    ],
   },
   {
     timestamps: true,
