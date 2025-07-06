@@ -9,16 +9,9 @@ dotenv.config({ path: "config.env" })
 const ApiError = require('./utils/apiError.js')
 const globalError = require('./middleware/errorMiddleware')
 const dbconnection = require("./config/connectDB");
-//Route
-const categoryRoute = require('./routes/categoryRoutes');
-const subCategoryRoute = require("./routes/subCategoryRoutes");
-const brandRoute = require("./routes/brandRoutes");
-const productRoute = require("./routes/productRoutes");
-const userRoute = require("./routes/userRoutes.js");
-const authRoute = require("./routes/authRoutes.js");
-const reviewRoute = require("./routes/reviewRoutes.js");
-const wishlistRoute = require("./routes/wishlistRoutes.js");
-const addressRoute = require("./routes/addressRoutes.js");
+
+//Routes
+const mountRoutes = require('./routes');
 
 //connect with DB
 dbconnection();
@@ -39,16 +32,7 @@ if (process.env.NODE_ENV === "development") {
 
 
 //Mount Routes
-app.use("/api/v1/categories/", categoryRoute);
-app.use("/api/v1/subcategories/", subCategoryRoute);   
-app.use("/api/v1/brands/", brandRoute);
-app.use("/api/v1/products/", productRoute);   
-app.use("/api/v1/users/", userRoute);   
-app.use("/api/v1/auth/", authRoute); 
-app.use("/api/v1/reviews/", reviewRoute);    
-app.use("/api/v1/wishlist/", wishlistRoute);    
-app.use("/api/v1/addresses/", addressRoute);    
-  
+mountRoutes(app);
 
 
 app.use((req, res, next) => {
