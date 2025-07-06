@@ -28,8 +28,8 @@ exports.addAddress = asyncHandler(async (req, res, next) => {
 exports.removeAddress = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
     req.user._id,
-    { $pull: { addresses: { _id: req.params.addressId } } },
-    { new: true }
+      { $pull: { addresses: { _id: req.params.addressId } } },
+      { new: true }
   );
   if (!user) {
     return next(new ApiError("User not found", 404));

@@ -18,7 +18,6 @@ const {
 const authprotect = require('../services/authService');
 
 const router = express.Router();
-
 router
   .route("/")
   .get(getBrands)
