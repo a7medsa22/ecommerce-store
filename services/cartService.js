@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Cart = require("../models/cartModels");
 const Product = require("../models/productModels");
 const ApiError = require("../utils/apiError");
+const couponModel = require("../models/couponModels");
 
 const calcTotalCartPrice = (index) => {
   let totalPrice = 0;
@@ -9,6 +10,7 @@ const calcTotalCartPrice = (index) => {
     (item) => (totalPrice += item.quantity * item.price)
   );
   index.totalCartPrice = totalPrice;
+  index.totalPriceAfterDiscount = undefined;
 };
 //@desc Add product in Cart
 //@desc POST /api/v1/carts
@@ -38,6 +40,7 @@ exports.addProductToCart = asyncHandler(async (req, res,next) => {
     const productIndex = cartuser.cartItems.findIndex(
       (item) => item.product.toString() === productId && item.color === color
     );
+
     if (productIndex > -1) {
       // Product already exists in the cart, update quantity
       cartuser.cartItems[productIndex].quantity += 1;
@@ -127,6 +130,35 @@ exports.updateLoggedUserCart = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Cart updated successfully",
+    data: cartUser,
+  });
+}
+);
+//@desc apply coupon on cart
+//@desc PUT /api/v1/carts/applycoupon
+//@desc private/user
+exports.applyCoupon = asyncHandler(async (req, res, next) => {
+  const coupon = await couponModel.findOne({
+    name: req.body.coupon,
+    expire: { $gt: Date.now() },
+  });
+  if (!coupon) {
+    return next(new ApiError("Coupon is invalid or expired", 404));
+  }
+  const cartUser = await Cart.findOne({ user: req.user._id });
+  if (!cartUser) {
+    return next(
+      new ApiError(`there is no cart for this user id: ${req.user._id}`, 404)
+    );
+  }
+  const PriceBeforDis = cartUser.totalCartPrice;
+  const totalPrice =  PriceBeforDis -(PriceBeforDis * coupon.discount) / 100;
+  cartUser.totalPriceAfterDiscount = totalPrice;
+
+  await cartUser.save();
+  res.status(200).json({
+    status: "success",
+    message: "Coupon applied successfully",
     data: cartUser,
   });
 }

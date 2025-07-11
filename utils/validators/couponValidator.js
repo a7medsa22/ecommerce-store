@@ -25,7 +25,14 @@ exports.createCouponValidator = [
   check("expire")
     .notEmpty()
     .withMessage("Expiration date is required")
-    .isISO8601()
+    .isISO8601().custom((value) => {
+      const expireDate = new Date(value);
+      const today = new Date();
+      if (expireDate < today) {
+        throw new Error('Expiration date must be in the future');
+      }
+      return true;
+    })
     .withMessage("Expiration date must be a valid date"),
   body("active")
     .optional()
