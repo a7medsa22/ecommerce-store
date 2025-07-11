@@ -21,4 +21,6 @@ const cartSchema = new mongoose.Schema({
         ref:'User',
     }
 }, { timestamps: true })
-module.exports = cartSchema
+// eslint-disable-next-line import/no-mutable-exports
+
+module.exports = mongoose.model("Cart", cartSchema);
