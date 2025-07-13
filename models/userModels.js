@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs"); 
 const { Schema } = require("mongoose");
-const { bool } = require("sharp");
+
 const userSchema = new Schema(
   {
     name: {
@@ -20,7 +20,7 @@ const userSchema = new Schema(
     profileImage: String,
     email: {
       type: String,
-      required: [true, "email Rquired"],
+      required: [true, "Email Required"],
       unique: true,
       lowercase: true,
     },

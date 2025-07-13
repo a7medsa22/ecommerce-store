@@ -119,6 +119,7 @@ exports.updateLoggedUserCart = asyncHandler(async (req, res, next) => {
   const productIndex = cartUser.cartItems.findIndex(
     (item) => item.product.toString() === productId
   );
+  
   if (productIndex > -1) {
     // Product already exists in the cart, update quantity
     cartUser.cartItems[productIndex].quantity = quantity;
