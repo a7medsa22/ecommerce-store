@@ -3,6 +3,9 @@ const ApiError = require("../utils/apiError");
 const Order = require("../models/OrderModels");
 const Cart = require("../models/cartModels");
 const User = require("../models/userModels");
+const Product = require("../models/productModels");
+const { filter } = require("compression");
+
 
 exports.createOrderCash = asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.user._id).select("addresses");
@@ -14,11 +17,15 @@ exports.createOrderCash = asyncHandler(async (req, res, next) => {
     }
 
     const { cartId } = req.body;
-    const cart = await Cart.findById(cartId);
-    if (!cart) {
-        return next(new ApiError(`There is no cart for this id: ${cartId}`, 404));
+    // Validate cartId exists in request body
+    if (!req.body.cartId) {
+        return next(new ApiError('Cart ID is required', 400));
     }
 
+    const cart = await Cart.findOne({ _id: cartId, user: req.user._id });
+    if (!cart) {
+        return next(new ApiError(`There is no cart for this id: ${cartId} for this user`, 404));
+    }
     let cartPrice = cart.totalCartPrice;
     if (cart.totalPriceAfterDiscount) {
         cartPrice = cart.totalPriceAfterDiscount;
@@ -35,11 +42,22 @@ exports.createOrderCash = asyncHandler(async (req, res, next) => {
         totalOrderPrice,
         paymentMethod: "cash",
         address: addresses.details,
-        phone: addresses.phone,
+        phone:addresses.phone,
     });
+  if (!order) {
+    return next (new ApiError('Error in creating order', 400));
+  }
+  const bulkOption = cart.cartItems.map((item) => ({
+    updateOne: {
+      filter: { _id: item.product },
+      update:{$inc:{quantity:-item.quantity , sold : +item.quantity}},
+       }
+     }))
+
+  await Product.bulkWrite(bulkOption, {});
 
     // Clear cart after creating order
     await Cart.findByIdAndDelete(cartId);
 
-    res.status(201).json({ status: 'success', data: order });
+    res.status(201).json({message: 'Order created successfully', data: order });
 });

@@ -146,5 +146,7 @@ exports.updateLoggedInfoValidator = [
     .optional()
     .isMobilePhone(["ar-EG", "ar-IQ", "ar-AE"])
     .withMessage("V:)- Invalid phone number format"),
+  check('addresses')
+  .optional(),
   validatorMiddleware,
 ];

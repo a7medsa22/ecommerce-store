@@ -163,6 +163,7 @@ exports.updateLoggedInfo = asyncHandler(async (req, res, next) => {
     {
       name: req.body.name,
       phone: req.body.phone,
+      ...(req.body.addresses && { addresses: req.body.addresses }),
     },
     {
       new: true,
