@@ -4,6 +4,7 @@ dist/
 build/
 
 # Environment variables
+config.env
 .env
 
 # Logs
