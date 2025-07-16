@@ -3,7 +3,7 @@ const {
   createOrderCash,
   getAllOrder,
   getOneOrder,
-  createfilterObject,
+  createfilewObject,
   updateIsDeliverOrder,
   updateIsPaidOrder,
 } = require("../services/orderService");
@@ -31,7 +31,7 @@ router.put(
 );
 
 router.use(authprotect.allowTo("user", "admin", "manager"));
-router.get("/", createfilterObject, getAllOrder);
+router.get("/", createfilewObject, getAllOrder);
 router.get("/:id", getOneOrder);
 
 module.exports = router;
