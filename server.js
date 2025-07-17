@@ -4,11 +4,13 @@ require('dotenv').config();
 const express = require('express');
 const dotenv =  require('dotenv');
 const morgan = require('morgan');
+const compression = require('compression');
 
 dotenv.config({ path: "config.env" })
 const ApiError = require('./utils/apiError.js')
 const globalError = require('./middleware/errorMiddleware')
 const dbconnection = require("./config/connectDB");
+const cors = require('cors')
 
 //Routes
 const mountRoutes = require('./routes');
@@ -18,7 +20,9 @@ dbconnection();
 
 //express app 
 const app = express();
-
+app.use(cors());
+app.options('*', cors()); // Enable pre-flight requests for all routes
+app.use(compression()); // Compress all routes
 
 
 //middleware

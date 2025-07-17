@@ -24,6 +24,9 @@ This project provides the backend logic and API for an online store. It manages 
 * 📊 **Advanced Filtering & Pagination**
 * 🧪 **Testing Suite** (Jest)
 * 🔧 **Development Tools** (ESLint, Prettier)
+* 🧾 **Order Payment & Delivery Status** (Admin/Manager can mark orders as paid/delivered)
+* 💳 **Stripe Checkout Integration** (Create checkout session for orders)
+* 🏠 **User Address Management** (Users can update all their addresses in one request)
 
 ---
 
@@ -111,6 +114,8 @@ EMAIL_PORT=465
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASSWORD=your-app-password
 ```
+# Stripe
+STRIPE_SECRET_KEY=your-password
 
 ### 4. Start the Server
 
@@ -152,8 +157,25 @@ npm test
 * `DELETE /:id` - Delete user (Admin only)
 * `PUT /changePassword/:id` - Change password
 * `GET /getMe` - Get current user profile
-* `PUT /updateMe` - Update current user profile
+* `PUT /updateMe` - Update current user profile (now supports updating the entire `addresses` array)
 * `DELETE /deleteMe` - Delete current user account
+
+### Orders (`/api/v1/orders/`)
+
+* `POST /` - Create a new order (User only)
+* `GET /` - Get all orders (User/Admin/Manager)
+* `GET /:id` - Get order by ID (User/Admin/Manager)
+* `PUT /:id/pay` - Mark order as paid (Admin/Manager only)
+* `PUT /:id/deliver` - Mark order as delivered (Admin/Manager only)
+* `GET /checkout-session/:cartId` - Create Stripe checkout session for a cart (User only)
+
+**Order responses now include a message:**
+```json
+{
+  "message": "Order created successfully",
+  "data": { ...order }
+}
+```
 
 ### Categories (`/api/v1/categories/`)
 
@@ -199,10 +221,7 @@ npm test
 
 * `GET /` - Get all products in the user's wishlist (Authenticated user)
 * `POST /` - Add a product to the user's wishlist (Authenticated user)
-
-    ```
 * `DELETE /:productId` - Remove a product from the user's wishlist (Authenticated user)
-
 
 * `productId`: required, must be a valid MongoId
 
@@ -225,51 +244,79 @@ nodejs-ecommerce-stor/
 │   ├── uploadImageMiddleware.js
 │   └── validatormiddleware.js
 ├── models/
+│   ├── orderModels.js
 │   ├── userModels.js
+│   ├── cartModels.js
+│   ├── couponModels.js
+│   ├── reviewModels.js
 │   ├── productModels.js
-│   ├── categoryModels.js
 │   ├── subCategoryModels.js
-│   ├── brandModels.js
-│   └── reviewModels.js
+│   ├── categoryModels.js
+│   └── brandModels.js
 ├── routes/
-│   ├── authRoutes.js
-│   ├── userRoutes.js
-│   ├── productRoutes.js
-│   ├── categoryRoutes.js
-│   ├── subCategoryRoutes.js
+│   ├── orderRoutes.js
+│   ├── cartRoutes.js
 │   ├── brandRoutes.js
-│   └── reviewRoutes.js
+│   ├── couponRoutes.js
+│   ├── addressRoutes.js
+│   ├── wishlistRoutes.js
+│   ├── reviewRoutes.js
+│   ├── productRoutes.js
+│   ├── subCategoryRoutes.js
+│   ├── userRoutes.js
+│   ├── authRoutes.js
+│   ├── categoryRoutes.js
+│   └── index.js
 ├── services/
-│   ├── authService.js
+│   ├── orderService.js
+│   ├── cartService.js
 │   ├── userService.js
+│   ├── adressService.js
+│   ├── authService.js
+│   ├── couponService.js
+│   ├── wishlistService.js
+│   ├── reviewService .js
+│   ├── handlerFactors.js
 │   ├── productService.js
-│   ├── categoryService.js
 │   ├── subCategoryService.js
-│   ├── brandService.js
-│   ├── reviewService.js
-│   └── handlerFactors.js
+│   ├── categoryService.js
+│   └── brandService.js
 ├── utils/
 │   ├── apiError.js
 │   ├── apiFeature.js
 │   ├── createToken.js
 │   ├── sendEmail.js
+│   ├── dummyData/
 │   └── validators/
-│       ├── addressValidator.js
-│       ├── authValidator.js
-│       ├── wishlistValidator.js
 │       ├── userValidator.js
-│       ├── categoryValidator.js
+│       ├── orderValidation.js
+│       ├── cartValidation.js
+│       ├── couponValidator.js
+│       ├── addressValidator.js
+│       ├── wishlistValidator.js
+│       ├── reviewValidator.js
+│       ├── authValidator.js
+│       ├── productValidator.js
+│       ├── categroyValidator.js
 │       ├── brandValidator.js
-│       ├── subCategoryValidator.js
-│       └── reviewValidator.js
+│       └── SubCategroyValidator.js
 ├── uploads/
 │   ├── users/
 │   ├── products/
 │   ├── categories/
 │   └── brands/
 ├── __tests__/
+│   └── auth.test.js
+├── templates/
+├── .vscode/
+├── .git/
+├── .gitignore
+├── .eslintrc.json
+├── config.env
 ├── server.js
-└── package.json
+├── package-lock.json
+├── package.json
+└── README.md
 ```
 
 ---

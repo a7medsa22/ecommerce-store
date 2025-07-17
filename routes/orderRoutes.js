@@ -6,11 +6,15 @@ const {
   createfilewObject,
   updateIsDeliverOrder,
   updateIsPaidOrder,
+  checkoutSession,
 } = require("../services/orderService");
 const { createOrderValidator } = require("../utils/validators/orderValidation");
 const authprotect = require("../services/authService");
 
 const router = express.Router();
+
+router.get('/checkout-session/:cartId', authprotect.protect,authprotect.allowTo('user') ,checkoutSession);
+
 router.use(authprotect.protect);
 router.post(
   "/",

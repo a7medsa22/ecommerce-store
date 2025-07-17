@@ -9,7 +9,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 //filter function to create filter object for orders
 exports.createfilewObject = (req, res, next) => {
-  if (req.user.role === "user")  req.filterObj = { user: req.user._id }; 
+  if (req.user.role === "user") req.filterObj = { user: req.user._id };
   next();
 };
 
@@ -84,7 +84,7 @@ exports.getAllOrder = getAll(Order);
 exports.getOneOrder = getOne(Order);
 
 //@desc Get all orders
-//@desc GET /api/v1/orders  
+//@desc GET /api/v1/orders
 //@desc private/Admin-Manager
 exports.updateIsDeliverOrder = asyncHandler(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
@@ -129,7 +129,9 @@ exports.updateIsPaidOrder = asyncHandler(async (req, res, next) => {
 exports.checkoutSession = asyncHandler(async (req, res, next) => {
   const cart = await Cart.findById(req.params.cartId);
   if (!cart) {
-    return next(new ApiError(`No cart found with id: ${req.params.cartId}`, 404));
+    return next(
+      new ApiError(`No cart found with id: ${req.params.cartId}`, 404)
+    );
   }
   let cartPrice = cart.totalCartPrice;
   if (cart.totalPriceAfterDiscount) {
@@ -141,19 +143,23 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
-        name: req.user.name,
-        amount: totalOrderPrice * 100, // Stripe expects the amount in cents
-        currency: "egp",
+        price_data: {
+          currency: "egp",
+          product_data: {
+            name: req.user.name,
+          },
+          unit_amount: totalOrderPrice * 100,
+        },  
         quantity: 1,
-      }
+      },
     ],
     mode: "payment",
-    success_url: `${req.protocol}://${req.get("host")}/orders`,
-    cancel_url: `${req.protocol}://${req.get('host')}/carts`,
+    success_url: `${req.protocol}://${req.get("host")}/api/v1/orders`,
+    cancel_url: `${req.protocol}://${req.get("host")}/api/v1/carts`,
     customer_email: req.user.email,
     client_reference_id: req.params.cartId,
     metadata: req.body.shippingAddress,
-  }); 
+  });
   res.status(200).json({
     status: "success",
     session,
