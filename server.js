@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 app.use(globalError);
 
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8000;
 
 const server = app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT} ...`)
