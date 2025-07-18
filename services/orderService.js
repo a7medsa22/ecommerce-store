@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
-const Order = require("../models/OrderModels");
+const Order = require('../models/orderModels');
 const Cart = require("../models/cartModels");
 const User = require("../models/userModels");
 const Product = require("../models/productModels");

@@ -4,12 +4,12 @@ require('dotenv').config();
 const express = require('express');
 const dotenv =  require('dotenv');
 const morgan = require('morgan');
-const compression = require('compression');
 
 dotenv.config({ path: "config.env" })
 const ApiError = require('./utils/apiError.js')
 const globalError = require('./middleware/errorMiddleware')
 const dbconnection = require("./config/connectDB");
+const compression = require('compression');
 const cors = require('cors')
 
 //Routes
@@ -20,8 +20,10 @@ dbconnection();
 
 //express app 
 const app = express();
-app.use(cors());
-app.options('*', cors()); // Enable pre-flight requests for all routes
+app.use(cors({
+  origin: true, // or your specific domain
+  credentials: true
+}));
 app.use(compression()); // Compress all routes
 
 
@@ -29,10 +31,10 @@ app.use(compression()); // Compress all routes
 app.use(express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development") 
     app.use(morgan("dev"))
     console.log(`mode: ${process.env.NODE_ENV}`);
-}
+
 
 
 //Mount Routes
