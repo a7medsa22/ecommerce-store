@@ -21,6 +21,11 @@ dbconnection();
 
 //express app 
 const app = express();
+
+app.get("/", (req, res) => {
+  res.send("✅ Server is up and running!");
+});
+
 app.use(cors({
   origin: true, // or your specific domain
   credentials: true
