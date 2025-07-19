@@ -26,7 +26,11 @@ app.use(cors({
   credentials: true
 }));
 app.use(compression()); // Compress all routes
-app.post('/webhook', express.json({type: 'application/json'}),webhookCheckout);
+app.post(
+  "/webhook-checkout",
+  express.json({ type: "application/json" }),
+  webhookCheckout
+);
 
 //middleware
 app.use(express.static(path.join(__dirname, 'uploads')));
