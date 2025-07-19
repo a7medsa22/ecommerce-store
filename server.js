@@ -11,6 +11,7 @@ const globalError = require('./middleware/errorMiddleware')
 const dbconnection = require("./config/connectDB");
 const compression = require('compression');
 const cors = require('cors')
+const { webhookCheckout } = require('./services/orderService.js');
 
 //Routes
 const mountRoutes = require('./routes');
@@ -25,7 +26,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(compression()); // Compress all routes
-
+app.post('/webhook', express.json({type: 'application/json'}),webhookCheckout);
 
 //middleware
 app.use(express.static(path.join(__dirname, 'uploads')));
