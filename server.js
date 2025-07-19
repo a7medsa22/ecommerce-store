@@ -28,7 +28,7 @@ app.use(cors({
 app.use(compression()); // Compress all routes
 app.post(
   "/webhook-checkout",
-  express.json({ type: "application/json" }),
+  express.raw({ type: "application/json" }),
   webhookCheckout
 );
 
