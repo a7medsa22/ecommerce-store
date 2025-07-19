@@ -6,6 +6,7 @@ const User = require("../models/userModels");
 const Product = require("../models/productModels");
 const { getAll, getOne } = require("./handlerFactors");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+console.log("Stripe secret key:", process.env.STRIPE_SECRET_KEY);
 
 //filter function to create filter object for orders
 exports.createfilewObject = (req, res, next) => {
