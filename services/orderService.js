@@ -169,6 +169,9 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
 });
 
 exports.webhookCheckout = asyncHandler(async (req, res, next) => {
+  
+    console.log("🔥 webhook route triggered");
+
   const signature = req.headers['stripe-signature'];
   let event ;
     try {
