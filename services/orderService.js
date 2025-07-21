@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
-const Order = require('../models/orderModels');
+const Order = require("../models/orderModels");
 const Cart = require("../models/cartModels");
 const User = require("../models/userModels");
 const Product = require("../models/productModels");
@@ -151,7 +151,7 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
             name: req.user.name,
           },
           unit_amount: totalOrderPrice * 100,
-        },  
+        },
         quantity: 1,
       },
     ],
@@ -167,31 +167,59 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     session,
   });
 });
+const createOrderCard = async (session) => {
+  const cartId = session.client_reference_id;
+  const addresses = session.metadata;
+  const totalOrderPrice = session.amount_total / 100;
+
+  const cart = await Cart.findById(cartId);
+  const user = await User.findOne({ email: session.customer_email });
+  if (!cart) {
+    throw new ApiError(`No cart found with id: ${cartId}`, 404);
+  }
+
+  const order = await Order.create({
+    user: user._id,
+    cartItems: cart.cartItems,
+    totalOrderPrice,
+    paymentMethod: "card",
+    address: addresses.details,
+    phone: addresses.phone,
+    isPaid: true,
+    paidAt: Date.now(),
+  });
+  if (!order) {
+    throw new ApiError("Error in creating order", 400);
+  }
+  const bulkOption = cart.cartItems.map((item) => ({
+    updateOne: {
+      filter: { _id: item.product },
+      update: { $inc: { quantity: -item.quantity, sold: +item.quantity } },
+    },
+  }));
+
+  await Product.bulkWrite(bulkOption, {});
+
+  // Clear cart after creating order
+  await Cart.findByIdAndDelete(cartId);
+};
 
 exports.webhookCheckout = asyncHandler(async (req, res, next) => {
-  
-    console.log("🔥 webhook route triggered");
-
-  const signature = req.headers['stripe-signature'];
-  let event ;
-    try {
-      event = stripe.webhooks.constructEvent(
-        req.body,
-        signature,
-        process.env.STRIPE_WEBHOOK_SECRET
-      );
-    } catch (err) {
-      return res.status(400).send(`Webhook Error: ${err.message}`);
+  const signature = req.headers["stripe-signature"];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-  if (event.type === 'checkout.session.completed') {
+  if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    console.log('created order here.....');
-     console.log("✅ Payment completed for session:", session.id);
-     console.log("Customer email:", session.customer_email);
-     console.log("Amount total:", session.amount_total);
-     console.log("Metadata:", session.metadata);
+    createOrderCard(session);
   }
 
-    res.status(200).json({ received: true });
+  res.status(200).json({ received: true });
 });
-
