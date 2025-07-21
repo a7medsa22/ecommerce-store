@@ -130,6 +130,7 @@ exports.updateIsPaidOrder = asyncHandler(async (req, res, next) => {
 //@desc private/User
 exports.checkoutSession = asyncHandler(async (req, res, next) => {
   const cart = await Cart.findById(req.params.cartId);
+  const user = await User.findById(req.user._id);
   if (!cart) {
     return next(
       new ApiError(`No cart found with id: ${req.params.cartId}`, 404)
@@ -141,6 +142,9 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
   }
   const totalOrderPrice =
     cartPrice + (cart.taxPrice || 0) + (cart.shippingPrice || 0);
+  const addressDetails = user.addresses[0]?.details || "No address provided";
+  const phone = user.addresses[0]?.phone || "No phone number provided";
+  
   // create a checkout session
   const session = await stripe.checkout.sessions.create({
     line_items: [
@@ -160,7 +164,10 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
     cancel_url: `${req.protocol}://${req.get("host")}/api/v1/carts`,
     customer_email: req.user.email,
     client_reference_id: req.params.cartId,
-    metadata: req.body.shippingAddress,
+    metadata: {
+      details: addressDetails,
+      phone: phone,
+    },
   });
   res.status(200).json({
     status: "success",
@@ -177,6 +184,10 @@ const createOrderCard = async (session) => {
   if (!cart) {
     throw new ApiError(`No cart found with id: ${cartId}`, 404);
   }
+  if (!user) 
+    throw new ApiError(`No user found with email: ${session.customer_email}`, 404);
+  
+
 
   const order = await Order.create({
     user: user._id,
@@ -218,7 +229,7 @@ exports.webhookCheckout = asyncHandler(async (req, res, next) => {
   }
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    createOrderCard(session);
+    await createOrderCard(session);
   }
 
   res.status(200).json({ received: true });
