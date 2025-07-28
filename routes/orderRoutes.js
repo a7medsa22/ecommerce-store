@@ -8,12 +8,12 @@ const {
   updateIsPaidOrder,
   checkoutSession,
 } = require("../services/orderService");
-const { createOrderValidator } = require("../utils/validators/orderValidation");
+const { createOrderValidator, getOrderValidator, checkoutSessionValidator } = require("../utils/validators/orderValidation");
 const authprotect = require("../services/authService");
 
 const router = express.Router();
 
-router.get('/checkout-session/:cartId', authprotect.protect,authprotect.allowTo('user') ,checkoutSession);
+router.get('/checkout-session/:cartId', authprotect.protect,authprotect.allowTo('user'), checkoutSessionValidator, checkoutSession);
 
 router.use(authprotect.protect);
 router.post(
@@ -36,6 +36,6 @@ router.put(
 
 router.use(authprotect.allowTo("user", "admin", "manager"));
 router.get("/", createfilewObject, getAllOrder);
-router.get("/:id", getOneOrder);
+router.get("/:id", getOrderValidator, getOneOrder);
 
 module.exports = router;

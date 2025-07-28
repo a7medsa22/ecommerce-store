@@ -1,4 +1,4 @@
-const { check } = require('express-validator');
+const { check, param } = require('express-validator');
 const validatorMiddleware = require('../../middleware/validatormiddleware');
 
 exports.createOrderValidator = [
@@ -19,5 +19,19 @@ exports.createOrderValidator = [
     .optional()
     .isString()
     .withMessage('Phone must be a string'),
+  validatorMiddleware,
+];
+
+exports.getOrderValidator = [
+  param('id')
+    .isMongoId()
+    .withMessage('Invalid order ID format'),
+  validatorMiddleware,
+];
+
+exports.checkoutSessionValidator = [
+  param('cartId')
+    .isMongoId()
+    .withMessage('Invalid cart ID format'),
   validatorMiddleware,
 ];
