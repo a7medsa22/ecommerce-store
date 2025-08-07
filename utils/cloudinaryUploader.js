@@ -2,7 +2,7 @@ const cloudinary = require('../config/cloudinary');
   const sharp = require('sharp');
   const asyncHandler = require('express-async-handler');
   const ApiError = require('./apiError');
-//Uploads an image buffer to Cloudinary.
+//Uploads an image buffer To Cloudinary.
 const uploadBufferToCloudinary = (buffer, folder = 'uploads', options = {}) => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
