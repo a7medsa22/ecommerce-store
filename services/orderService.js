@@ -5,8 +5,11 @@ const Cart = require("../models/cartModels");
 const User = require("../models/userModels");
 const Product = require("../models/productModels");
 const { getAll, getOne } = require("./handlerFactors");
-const Stripe = require("stripe");
+
+const Stripe = require('stripe');
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 console.log("Stripe secret key:", process.env.STRIPE_SECRET_KEY);
 
 //filter function to create filter object for orders
