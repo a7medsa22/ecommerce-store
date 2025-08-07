@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const { uploadSingleImage } = require("../middleware/uploadImageMiddleware");
+const { uploadImageToCloudinary } = require("../utils/cloudinaryUploader");
 const {
   deleteOne,
   updateOne,
@@ -18,22 +19,8 @@ const userModel = require("../models/userModels");
 // Upload single Image
 exports.updateUserimage = uploadSingleImage("profileImage");
 
-exports.resizeUserImage = asyncHandler(async (req, res, next) => {
-  if (!req.file) {
-    return next(new ApiError("No file uploaded", 400));
-  }
-  const filename = `user-${uuidv4()}-${Date.now()}.jpeg`;
-  if (req.file) {
-    await sharp(req.file.buffer)
-      .resize(600, 600)
-      .toFormat("jpeg")
-      .jpeg({ quality: 90 })
-      .toFile(`uploads/users/${filename}`);
-
-    req.body.profileImage = filename;
-  }
-  next();
-});
+// Use generic image upload middleware
+exports.resizeUserImage = uploadImageToCloudinary('users', 'profileImage', 600);
 
 //@desc Get list of users
 //@desc GET /api/v1/users

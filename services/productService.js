@@ -5,6 +5,7 @@ const multer = require("multer");
 
 const ApiError = require("../utils/apiError");
 const { uploadArrayImages } = require("../middleware/uploadImageMiddleware");
+const { uploadProductImages } = require("../utils/cloudinaryUploader");
 const {
     deleteOne,
     updateOne,
@@ -20,40 +21,8 @@ exports.updateProductimages = uploadArrayImages([
   { name: "images", maxCount: 5 },
 ]);
 
-exports.resizeImageCover = asyncHandler(async (req, res, next) => {
-  console.log(req.files);
-  if (!req.files) {
-    return next(new ApiError("No files uploaded", 400));
-  }
-  if (req.files.imageCover) {
-    const imageCoverFileName = `product-${uuidv4()}-${Date.now()}-cover.jpeg`;
-
-    await sharp(req.files.imageCover[0].buffer)
-      .resize(2000, 1200)
-      .toFormat("jpeg")
-      .jpeg({ quality: 90 })
-      .toFile(`uploads/products/${imageCoverFileName}`);
-
-    req.body.imageCover = imageCoverFileName;
-  }
-  if (req.files.images) {
-    req.body.images = await Promise.all(
-    req.files.images.map(async (img, idx) => {
-      const imagesFileName = `product-${uuidv4()}-${Date.now()}-${idx + 1}.jpeg`;
-
-      await sharp(img.buffer)
-        .resize(800, 800)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(`uploads/products/${imagesFileName}`);
-
-      return imagesFileName
-    })
-        );
-        }
-            
-  next();
-});
+// Use specialized product image upload middleware
+exports.resizeImageCover = uploadProductImages();
 
 //@desc Git list of products
 //@desc GET /api/v1/products

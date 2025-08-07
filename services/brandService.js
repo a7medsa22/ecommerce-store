@@ -2,6 +2,7 @@ const sharp = require("sharp");
 const asyncHandler = require("express-async-handler");
 const { v4: uuidv4 } = require("uuid");
 const { uploadSingleImage } = require("../middleware/uploadImageMiddleware");
+const { uploadImageToCloudinary } = require("../utils/cloudinaryUploader");
 const {
   deleteOne,
   updateOne,
@@ -15,22 +16,8 @@ const ApiError = require("../utils/apiError");
 // Upload single Image
 exports.updateBrandimage = uploadSingleImage("image");
 
-exports.resizeBrandImage = asyncHandler(async (req, res, next) => {
-  if (!req.file) {
-    return next(new ApiError("No file uploaded", 400)); 
-  }
-  const filename = `brand-${uuidv4()}-${Date.now()}.jpeg`;
-
-  await sharp(req.file.buffer)
-    .resize(600, 600)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`uploads/brands/${filename}`);
-
-  req.body.image = filename;
-
-  next();
-});
+// Use generic image upload middleware
+exports.resizeBrandImage = uploadImageToCloudinary('brands', 'image', 600);
 
 //@desc Git list of brands
 //@desc GET /api/v1/brands
