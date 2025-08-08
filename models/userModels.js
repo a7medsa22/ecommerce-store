@@ -106,10 +106,7 @@ userSchema.methods.correctPassword = async function (candidatePassword, userPass
 
 // Find and Create and update (findAll in getAll service made manual)
 userSchema.virtual("profileImageUrl").get(function () {
-  if (this.profileImage) {
-    return `${process.env.BASE_URL}/users/${this.profileImage}`;
-  }
-  return null;
+  return this.profileImage || null;
 });
 //step 2 create modle
 const userModel = mongoose.model("User", userSchema);

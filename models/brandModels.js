@@ -43,10 +43,7 @@ const BrandSchema = new Schema(
 );
 // Find and Create and update (findAll in getAll service made manual)
 BrandSchema.virtual("imageUrl").get(function () {
-  if (this.image) {
-    return `${process.env.BASE_URL}/brands/${this.image}`;
-  }
-  return null;
+  return this.image || null;
 });
 //step 2 create modle
 const brandmoudle = mongoose.model("Brand", BrandSchema);

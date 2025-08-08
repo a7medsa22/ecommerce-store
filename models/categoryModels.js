@@ -50,10 +50,7 @@ CategorySchema.pre('save', function (next) {
 });
 // Find and Create and update (findAll in getAll service made manual)
 CategorySchema.virtual("imageUrl").get(function () {
-  if (this.image) {
-    return `${process.env.BASE_URL}/categories/${this.image}`;
-  }
-  return null;
+  return this.image || null;
 });
 
 

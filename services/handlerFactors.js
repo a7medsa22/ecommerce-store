@@ -5,28 +5,8 @@ const ApiFeatures = require("../utils/apiFeature");
 // handler getAll() -> imageURL and imageCover mauale
 function attachComputedFields(docs, modelName) {
   return docs.map((doc) => {
-    if (modelName === "brand") {
-      if (doc.image) {
-        doc.imageUrl = `${process.env.BASE_URL}/brands/${doc.image}`;
-      }
-    } else if (modelName === "category") {
-      if (doc.image) {
-        doc.imageUrl = `${process.env.BASE_URL}/categories/${doc.image}`;
-      }
-    } else if (modelName === "user") {
-      if (doc.profileImage) {
-        doc.imageUrl = `${process.env.BASE_URL}/users/${doc.profileImage}`;
-      }
-    } else if (modelName === "product") {
-      if (doc.imageCover) {
-        doc.imageCoverUrl = `${process.env.BASE_URL}/products/${doc.imageCover}`;
-      }
-      if (doc.images && Array.isArray(doc.images)) {
-        doc.imagesUrl = doc.images.map(
-          (img) => `${process.env.BASE_URL}/products/${img}`
-        );
-      }
-    }
+    // Virtual fields are now handled by the models themselves
+    // No need to manually add image URLs here
     return doc;
   });
 }

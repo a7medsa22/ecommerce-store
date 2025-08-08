@@ -58,7 +58,7 @@ const limiter = rateLimit({
 });
 app.use("/api/", limiter);
 
-app.use(csrf({ cookie: true }));
+//app.use(csrf({ cookie: true }));
 //Mount Routes
 mountRoutes(app);
 

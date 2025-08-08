@@ -110,17 +110,11 @@ productSchema.pre(/^find/, function (next) {
 });
 
 productSchema.virtual("imageCoverUrl").get(function () {
-  if (this.imageCover) {
-    return `${process.env.BASE_URL}/products/${this.imageCover}`;
-  }
-  return null;
+   return this.imageCover || null;
 });
 
 productSchema.virtual("imagesUrl").get(function () {
-  if (this.images && Array.isArray(this.images)) {
-    return this.images.map((img) => `${process.env.BASE_URL}/products/${img}`);
-  } 
-  return [];
+return this.images || [];
 });
 
 module.exports = mongoose.model("Product", productSchema);
