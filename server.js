@@ -25,6 +25,9 @@ dbconnection();
 //express app
 const app = express();
 
+app.set("trust proxy", 1);
+
+
 app.get("/", (req, res) => {
   res.send("✅ Server is up and running!");
 });
