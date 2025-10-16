@@ -1,4 +1,4 @@
-<img width="1776" height="802" alt="image" src="https://github.com/user-attachments/assets/3944143b-b2f6-4baf-bdff-507d07b17643" /># 🛒 Node.js E-commerce Store (Backend)
+### 🛒 Node.js E-commerce Store (Backend)
 
 A powerful and modular backend for an E-commerce application built with **Node.js**, **Express**, and **MongoDB**. This project provides a complete RESTful API for managing an online store with advanced features like image uploads, user authentication, product management, and more.
 
@@ -334,9 +334,21 @@ nodejs-ecommerce-stor/
 
 ## 📮 API Testing
 
-You can explore and test all endpoints using the Postman Collection below:
+| Module | Preview |
+|--------|----------|
+| Postman collection UI | ![Photo Postman Collection](./uploads/postman-collection.png) |
+<h2 align="center">📦 E-commerce API Collection</h2>
 
-👉 [E-Commerce API Postman Collection](https://www.postman.com/lunar-module-engineer-73607525/public-api/collection/lc3rhsu/e-commerce)
+<p align="center">
+  Easily explore and test the <strong>E-commerce API</strong> endpoints using the official Postman collection.<br>
+  Click the button below to view it directly in Postman 👇 
+ <p align="center">
+  <a href="https://www.postman.com/lunar-module-engineer-73607525/public-api/public-apis/collection/lc3rhsu/e-commerce" target="_blank">
+    <img src="https://img.shields.io/badge/View%20on%20Postman-orange?style=for-the-badge&logo=postman" alt="View on Postman">
+  </a>
+</p>
+</p>
+
 
 
 ## 🔧 Configuration
