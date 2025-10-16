@@ -113,9 +113,20 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=465
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASSWORD=your-app-password
-```
+
 # Stripe
 STRIPE_SECRET_KEY=your-password
+STRIPE_WEBHOOK_SECRET=your-webhook-paasword
+
+#CLOUDINARY
+CLOUDINARY_NAME=colection-name
+CLOUDINARY_API_KEY=secret-key
+CLOUDINARY_API_SECRET=your-api
+
+
+
+
+```
 
 ### 4. Start the Server
 
