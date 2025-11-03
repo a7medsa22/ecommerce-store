@@ -22,7 +22,7 @@ exports.resizeBrandImage = uploadImageToCloudinary('brands', 'image', 600);
 //@desc Git list of brands
 //@desc GET /api/v1/brands
 //@desc public
-exports.getBrands = getAll(brandmoudle, "brand");
+exports.getBrands = getAll(brandmoudle, "brand", true);
 //@desc Git brand
 //@desc GET /api/v1/brands/:id
 //@desc public

@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeature");
+const { default: redis } = require("../utils/redis");
 
 // handler getAll() -> imageURL and imageCover mauale
 function attachComputedFields(docs, modelName) {
@@ -10,12 +11,23 @@ function attachComputedFields(docs, modelName) {
     return doc;
   });
 }
-exports.getAll = (Model, modelName = "") =>
+exports.getAll = (Model, modelName = "",useCashe=false) =>
   asyncHandler(async (req, res) => {
     let filter = {};
     if (req.filterObj) {
       filter = req.filterObj;
     }
+    // Check for cached data
+    const cachekey = `${modelName}:all:${JSON.stringify(req.query)}`
+    if(useCashe){
+      const cached = await redis.get(cachekey);
+
+      if(cached){
+        console.log(`📦 Cache hit for ${modelName}`);
+       return res.status(200).json(JSON.parse(cached));
+      }
+    }
+
     const documentCount = await Model.countDocuments();
     const features = new ApiFeatures(Model.find(filter), req.query)
       .filter()
@@ -30,10 +42,16 @@ exports.getAll = (Model, modelName = "") =>
 
     // ✅ Force inclusion of virtuals by converting to JSON
     const data = attachComputedFields(docs, modelName);
+    
+    const response = {result: data.length, paginationResulte, data };
 
-    res
-      .status(200)
-      .json({ result: data.length, paginationResulte, data: data });
+    // Store in cache
+    if(useCashe){
+      await redis.set(cacheKey, JSON.stringify(response), { EX: 3600 });
+      console.log(`💾 Cache set for ${modelName}`);
+    }
+
+    res.status(200).json(response);
   });
 
 exports.getOne = (Model, paginationOption) =>

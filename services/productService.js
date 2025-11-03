@@ -27,7 +27,7 @@ exports.resizeImageCover = uploadProductImages();
 //@desc Git list of products
 //@desc GET /api/v1/products
 //@access public
-exports.getProducts = getAll(ProductModel, "product");
+exports.getProducts = getAll(ProductModel, "product", true);
 //@desc Git product
 //@route GET /api/v1/products/:id
 //@access public

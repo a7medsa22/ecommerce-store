@@ -1,6 +1,4 @@
 const path = require("path");
-require("dotenv").config();
-
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
@@ -8,7 +6,6 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const { rateLimit } = require("express-rate-limit");
 
-dotenv.config({ path: "config.env" });
 const ApiError = require("./utils/apiError.js");
 const globalError = require("./middleware/errorMiddleware");
 const dbconnection = require("./config/connectDB");

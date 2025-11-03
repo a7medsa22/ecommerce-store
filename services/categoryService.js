@@ -24,7 +24,7 @@ exports.resizeImage = uploadImageToCloudinary('categories', 'image', 600);
 //@desc Git list of categories
 //@desc GET /api/v1/categories
 //@desc public
-exports.getCategories = getAll(Categorymoudle, "category");
+exports.getCategories = getAll(Categorymoudle, "category",true);
 //@desc Git category
 //@desc GET /api/v1/categories/:id
 //@desc public
