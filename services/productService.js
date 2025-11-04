@@ -36,13 +36,13 @@ exports.getProduct = getOne(ProductModel,'reviews');
 //@desc create Product
 //@route POST /api/v1/products
 //@access private
-exports.createProduct = createOne(ProductModel);
+exports.createProduct = createOne(ProductModel,"product",true);
 //@desc Update Product
 //@route PUT /api/v1/products/:id
 //@access private
-exports.updateProduct = updateOne(ProductModel);
+exports.updateProduct = updateOne(ProductModel,"product",true);
 
 //@desc Delete Product
 //@route DELETE /api/v1/products/:id
 //@access private
-exports.deleteProduct = deleteOne(ProductModel);
+exports.deleteProduct = deleteOne(ProductModel,"product",true);

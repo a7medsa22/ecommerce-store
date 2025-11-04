@@ -33,14 +33,14 @@ exports.getCategory = getOne(Categorymoudle);
 //@desc create category
 //@desc POST /api/v1/categories
 //@desc private
-exports.createCategory = createOne(Categorymoudle);
+exports.createCategory = createOne(Categorymoudle,"category",true);
 
 //@desc update category
 //@desc PUT /api/v1/categories
 //@desc private
-exports.updateCategory = updateOne(Categorymoudle);
+exports.updateCategory = updateOne(Categorymoudle,"category",true);
 
 //@desc Delete category
 //@desc DELETE /api/v1/categories
 //@desc private
-exports.deleteCategory = deleteOne(Categorymoudle);
+exports.deleteCategory = deleteOne(Categorymoudle,"category",true);

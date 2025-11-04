@@ -1,7 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeature");
-const { default: redis } = require("../utils/redis");
+const { default: redis } = require("../config/redis");
+const { clearCacheByModel } = require("../utils/cache");
 
 // handler getAll() -> imageURL and imageCover mauale
 function attachComputedFields(docs, modelName) {
@@ -71,13 +72,19 @@ exports.getOne = (Model, paginationOption) =>
     res.status(200).json({ data: document });
   });
 
-exports.createOne = (Model) =>
+exports.createOne = (Model,modelName="",useCashe=false) =>
   asyncHandler(async (req, res) => {
     const document = await Model.create(req.body);
+
+    // Clear relevant cache entries
+    if(useCashe){
+      await clearCacheByModel(modelName);
+    }
+    
     res.status(201).json({ data: document });
   });
 
-exports.updateOne = (Model) =>
+exports.updateOne = (Model,modelName="",useCashe=false) =>
   asyncHandler(async (req, res, next) => {
     const document = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -89,9 +96,15 @@ exports.updateOne = (Model) =>
       );
     }
     document.save();
+
+    // Clear relevant cache entries
+    if(useCashe){
+      await clearCacheByModel(modelName);
+    }
+
     res.status(200).json({ data: document });
   });
-exports.deleteOne = (Model) =>
+exports.deleteOne = (Model,modelName,useCashe=false) =>
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
@@ -100,5 +113,11 @@ exports.deleteOne = (Model) =>
       return next(new ApiError(`No document found with id: ${id}`, 404));
     }
     document.remove();
+
+    // Clear relevant cache entries
+    if(useCashe){
+      await clearCacheByModel(modelName);
+    }
+
     res.status(204).send();
   });

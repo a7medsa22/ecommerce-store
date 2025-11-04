@@ -31,14 +31,14 @@ exports.getBrand = getOne(brandmoudle);
 //@desc create brand
 //@desc POST /api/v1/brands
 //@desc private
-exports.createbrand = createOne(brandmoudle);
+exports.createbrand = createOne(brandmoudle,"brand",true);
 
 //@desc update brand
 //@desc PUT /api/v1/brands
 //@desc private
-exports.updatebrand = updateOne(brandmoudle);
+exports.updatebrand = updateOne(brandmoudle,"brand",true);
 
 //@desc Delete brand
 //@desc DELETE /api/v1/brands
 //@desc private
-exports.deletebrand = deleteOne(brandmoudle);
+exports.deletebrand = deleteOne(brandmoudle,"brand",true);
