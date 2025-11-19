@@ -59,8 +59,17 @@ exports.getOne = (Model, paginationOption) =>
   asyncHandler(async (req, res, next) => {
     // build the query
     let query = Model.findById(req.params.id);
+
     if (paginationOption) {
+      if (typeof paginationOption === 'string') {
       query = query.populate(paginationOption);
+    }else {
+        query = query.populate({
+          path: populateOption.path,
+          select: populateOption.select || '',
+          options: paginationOption.options || {},
+        });
+      }
     }
     // Execute
     const document = await query;
@@ -71,6 +80,7 @@ exports.getOne = (Model, paginationOption) =>
     }
     res.status(200).json({ data: document });
   });
+
 
 exports.createOne = (Model,modelName="",useCashe=false) =>
   asyncHandler(async (req, res) => {

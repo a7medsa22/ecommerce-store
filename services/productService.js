@@ -28,10 +28,14 @@ exports.resizeImageCover = uploadProductImages();
 //@desc GET /api/v1/products
 //@access public
 exports.getProducts = getAll(ProductModel, "product", true);
+
 //@desc Git product
 //@route GET /api/v1/products/:id
 //@access public
-exports.getProduct = getOne(ProductModel,'reviews');
+exports.getProduct = getOne(ProductModel,{
+       path:'reviews',
+       select:'rating title comment user',
+       options: { limit: 5, sort: { createdAt: -1 } }});
 
 //@desc create Product
 //@route POST /api/v1/products
