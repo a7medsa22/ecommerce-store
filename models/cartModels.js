@@ -21,6 +21,11 @@ const cartSchema = new mongoose.Schema({
         ref:'User',
     }
 }, { timestamps: true })
+
+
 // eslint-disable-next-line import/no-mutable-exports
+ 
+cartSchema.index({ user: 1 });
+cartSchema.index({ 'cartItems.product': 1 });
 
 module.exports = mongoose.model("Cart", cartSchema);

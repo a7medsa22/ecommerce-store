@@ -65,6 +65,11 @@ const orderSchema = new mongoose.Schema({
     },
     deliveredAt: Date,
 }, { timestamps: true });
+
+orderSchema.index({ user: 1, createdAt: -1 }); // user orders sorted by date
+orderSchema.index({ status: 1, createdAt: -1 }); // filter by status + latest first
+
+
 orderSchema.pre(/^find/, function (next) {
     this.populate({path: 'user', select: 'name email phone'})
         .populate({ path: 'cartItems.product', select: 'name price imageCover' });
