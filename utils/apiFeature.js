@@ -47,20 +47,18 @@ class ApiFeatures {
   }
   search(modleName) {
     if (this.queryStr.keyword) {
-      const queryFilters = {};
       if (modleName === "product") {
-        queryFilters.$or = [
-          { title: { $regex: this.queryStr.keyword, $options: "i" } },
-          { description: { $regex: this.queryStr.keyword, $options: "i" } },
-        ];
-      } else {
-        queryFilters.$or = [
-          { name: { $regex: this.queryStr.keyword, $options: "i" } },
-        ];
-      }
 
-      this.mongooseQuery = this.mongooseQuery.find(queryFilters);
-    }
+        this.mongooseQuery = this.mongooseQuery.find({
+          $text: { $search: this.queryStr.keyword },
+        });
+
+      } else {
+        this.mongooseQuery = this.mongooseQuery.find({
+          name: { $regex: this.queryStr.keyword, $options: "i" },
+        });
+      }
+       }
     return this;
   }
   pagination(documentsCount) {

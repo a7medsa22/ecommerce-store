@@ -9,12 +9,15 @@ const productSchema = mongoose.Schema(
       trim: true,
       minlength: [3, "Too Short product Tilte"],
       maxlength: [100, "Too Long product Title"],
+      index: true,
     },
     slug: {
       type: String,
       require: true,
       lowercase: true,
+      index: true,
     },
+    
     description: {
       type: String,
       require: true,
@@ -32,6 +35,7 @@ const productSchema = mongoose.Schema(
       type: Number,
       require: true,
       max: [200000, "Too Long product price"],
+      index: true,
     },
     priceAfterDiscount: {
       type: Number,
@@ -50,6 +54,7 @@ const productSchema = mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Category",
       require: true,
+      index: true,
     },
     subcategories: [
       {
@@ -60,11 +65,13 @@ const productSchema = mongoose.Schema(
     brand: {
       type: mongoose.Schema.ObjectId,
       ref: "Brand",
+      index: true,
     },
     ratingsAverage: {
       type: Number,
       min: [1, "Rating must be abrove or equal 1.0"],
       max: [5, "Rating must be below or equal 5.0"],
+      index: true,
     },
     ratingsQuantity: {
       type: Number,
@@ -92,6 +99,11 @@ const productSchema = mongoose.Schema(
     },
   }
 );
+
+productSchema.index({ category: 1, price: 1 });
+productSchema.index({ title: "text", description: "text" });
+
+
 productSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'product',
