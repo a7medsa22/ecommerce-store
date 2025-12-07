@@ -375,8 +375,8 @@ nodejs-ecommerce-stor/
   Easily explore and test the <strong>E-commerce API</strong> endpoints using the official Postman collection.<br>
   Click the button below to view it directly in Postman 👇 
  <p align="center">
-  <a href="https://www.postman.com/lunar-module-engineer-73607525/public-api/public-apis/collection/lc3rhsu/e-commerce" target="_blank">
-    <img src="https://img.shields.io/badge/View%20on%20Postman-orange?style=for-the-badge&logo=postman" alt="View on Postman">
+  <a href="https://documenter.getpostman.com/view/40712808/2sB3dQtoQT" target="_blank">
+    <img src="https://img.shields.io/badge/View%20on%20Postman-orange?style=for-the-badge&logo=postman" alt="View Document">
   </a>
 </p>
 </p>
