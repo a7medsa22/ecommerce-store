@@ -1,6 +1,7 @@
 const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config({ path: "config.env" });
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
@@ -20,7 +21,7 @@ const mountRoutes = require("./routes");
 dbconnection();
 
 //express app
-const app = express();
+const app = express();  
 
 app.set("trust proxy", 1);
 

@@ -1,14 +1,14 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeature");
-const { default: redis } = require("../config/redis");
+const redis = require("../config/redis");
 const { clearCacheByModel } = require("../utils/cache");
 
 // handler getAll() -> imageURL and imageCover mauale
 function attachComputedFields(docs, modelName) {
   return docs.map((doc) => {
     // Virtual fields are now handled by the models themselves
-    // No need to manually add image URLs here
+    // No need to manually add image URLs here 
     return doc;
   });
 }
@@ -19,13 +19,17 @@ exports.getAll = (Model, modelName = "",useCashe=false) =>
       filter = req.filterObj;
     }
     // Check for cached data
-    const cachekey = `${modelName}:all:${JSON.stringify(req.query)}`
-    if(useCashe){
-      const cached = await redis.get(cachekey);
+    const cacheKey = `${modelName}:all:${JSON.stringify(req.query)}`;
+    if(useCashe && redis.isOpen){
+      try {
+        const cached = await redis.get(cacheKey);
 
-      if(cached){
-        console.log(`📦 Cache hit for ${modelName}`);
-       return res.status(200).json(JSON.parse(cached));
+        if(cached){
+          console.log(`📦 Cache hit for ${modelName}`);
+         return res.status(200).json(JSON.parse(cached));
+        }
+      } catch (err) {
+        console.error("Redis get error:", err);
       }
     }
 
@@ -47,9 +51,13 @@ exports.getAll = (Model, modelName = "",useCashe=false) =>
     const response = {result: data.length, paginationResulte, data };
 
     // Store in cache
-    if(useCashe){
-      await redis.set(cacheKey, JSON.stringify(response), { EX: 3600 });
-      console.log(`💾 Cache set for ${modelName}`);
+    if(useCashe && redis.isOpen){
+      try {
+        await redis.set(cacheKey, JSON.stringify(response), { EX: 3600 });
+        console.log(`💾 Cache set for ${modelName}`);
+      } catch (err) {
+        console.error("Redis set error:", err);
+      }
     }
 
     res.status(200).json(response);
